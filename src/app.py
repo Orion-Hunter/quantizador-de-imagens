@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import filedialog
+import cv2 as cv
 
 arquivo = filedialog.askopenfile()
-for line in arquivo:
-    print(line)
+cv.imread(arquivo.name)
 
 root = tk.Tk()
 
