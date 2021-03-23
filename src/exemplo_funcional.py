@@ -11,6 +11,7 @@ im1 = im1.quantize(100)
   
 # to show specified image  
 im1.show()  
+#----------------------------------------------------------------------------------------
 
 #ex2 - para preto e branco
 # -*- coding: utf-8 -*-
@@ -41,7 +42,7 @@ img_aum = np.repeat(img_aum, m, axis=1)
 # Assim, teremos uma imagem com 8 tons de cinza. A conta é feita desta forma para descartar a parte decimal dos números e alterar o vetor para que possua apenas 8 valores possíveis.
 n = 4 #numero de escalas de cinza
 r = math.floor(255/n)
-img = np.uint8(img / r) * r
+img = np.uint8(img / r) * r #uint8 = integer (0 to 255).
 
 # Salvar imagem no disco #
 #cv2.imwrite('C:/Diretório', img_aum)
@@ -55,3 +56,27 @@ cv2.imshow('Quantizada',img)
 # Funções para o funcionamento correto do python no Windows.
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+#--------------------------------------------------------------------------------------------------
+
+#ex3 - para img preto e branco usando algoritmo de clusterização
+#esse não consegui instalar a biblioteca T_T
+#resto do codigo ta aqui: https://www.youtube.com/watch?v=O0suOccKLbs
+
+import matplotlib.pyplot as plt
+import numpy as np
+from skimage import io
+from sklearn.cluster import KMeans
+from sklearn.utils import shuffle
+
+n_colors = 2
+image_raw = io.imread('D:/lena.jpg')
+image = np.array(image_raw, dtype=np.float64)/255
+h,w,d = image.shape
+image_array = np.reshape(image,(h*w, d))
+
+plt.figure(1)
+plt.clf()
+plt.axis('off')
+plt.title('Img Original')
+plt.imshow(image)
