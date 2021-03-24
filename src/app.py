@@ -16,7 +16,7 @@ def open_file_selector():
 def open_img(component):
     x = open_file_selector()
     img = Image.open(x)
-    img = img.resize((250, 250), Image.ANTIALIAS)
+    img = img.resize((500, 350), Image.ANTIALIAS)
     img = ImageTk.PhotoImage(img)
     imagem_original = Label(root, image=img)
     imagem_original.image= img
@@ -39,13 +39,13 @@ menu_bar.add_cascade(label="File", menu=filemenu)
 #Settings Components
 label1= Label(root,text='Imagem Original')
 label1.grid(row=16,column=0)
-frame1 = Frame(root, bg="#FFFFFF", height=250, width=250, borderwidth=3)
+frame1 = Frame(root, bg="#FFFFFF", height=355, width=505, borderwidth=3)
 frame1.grid(row=17, column=0, sticky=W, pady=7, padx=7)
 
 label2= Label(root,text='Imagem Quantizada')
-label2.grid(row=19,column=0)
-frame2 = Frame(root, bg="#FFFFFF", height=250, width=250, borderwidth=3)
-frame2.grid(row=20, column=0, sticky=W, pady=7, padx=7)
+label2.grid(row=16,column=5)
+frame2 = Frame(root, bg="#FFFFFF", height=355, width=505, borderwidth=3)
+frame2.grid(row=17, column=5, sticky=W, pady=7, padx=7)
 
 
 
