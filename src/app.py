@@ -7,6 +7,16 @@ from cv2 import cv2
 import numpy as np
 import math
 
+from tkinter.ttk import *
+
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+figure = Figure(figsize=(5, 4), dpi=100)
+plt = figure.add_subplot(1, 1, 1)
+
 def quantizador(imagem, num_escala):#retorna a imagem quantizada
     ## Quantização ##
     # 255 / 31 = 8,22...
@@ -39,13 +49,13 @@ def select_image():
 		# edges in it
 		image = cv2.imread(path)
 		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-		edged = quantizador(gray, 4)
+		gray_quantizado = quantizador(gray, 4)
 		# OpenCV represents images in BGR order; however PIL represents
 		# images in RGB order, so we need to swap the channels
 		#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 		# convert the images to PIL format...
 		image = Image.fromarray(gray)
-		edged = Image.fromarray(edged)
+		edged = Image.fromarray(gray_quantizado)
 		# ...and then to ImageTk format
 		image = ImageTk.PhotoImage(image)
 		edged = ImageTk.PhotoImage(edged)
@@ -55,11 +65,19 @@ def select_image():
 			# the first panel will store our original image
 			panelA = Label(image=image)
 			panelA.image = image
-			panelA.pack(side="left", padx=10, pady=10)
+			panelA.grid(row=0, column=0)
+			valor = gera_histograma(gray)
+			plt.plot(valor)
+			canvas = FigureCanvasTkAgg(figure, root)
+			canvas.get_tk_widget().grid(row=1, column=0, padx=10, pady=10)
 			# while the second panel will store the edge map
 			panelB = Label(image=edged)
 			panelB.image = edged
-			panelB.pack(side="right", padx=10, pady=10)
+			panelB.grid(row=0, column=1, padx=10, pady=10)
+			valor2 = gera_histograma(gray_quantizado)
+			plt.plot(valor)
+			canvas = FigureCanvasTkAgg(figure, root)
+			canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
 		# otherwise, update the image panels
 		else:
 			# update the pannels
@@ -76,7 +94,7 @@ panelB = None
 # dialog and allow the user to select an input image; then add the
 # button the GUI
 btn = Button(root, text="Selecionar Imagem", command=select_image)
-btn.pack(side="bottom", fill="both", expand="yes", padx="10", pady="10")
+btn.grid(row=2, padx="10", pady="10")
 # kick off the GUI
 root.mainloop()
 
