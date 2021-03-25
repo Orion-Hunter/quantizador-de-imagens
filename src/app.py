@@ -48,7 +48,15 @@ def select_image():
 		# load the image from disk, convert it to grayscale, and detect
 		# edges in it
 		image = cv2.imread(path)
-		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+		#redimensionamento
+		porcentagem = 0.5
+		largura = int(image.shape[0]*porcentagem)
+		altura = int(image.shape[1]*porcentagem)
+		dim = (altura, largura)
+
+		img_dim = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+
+		gray = cv2.cvtColor(img_dim, cv2.COLOR_BGR2GRAY)
 		gray_quantizado = quantizador(gray, 4)
 		# OpenCV represents images in BGR order; however PIL represents
 		# images in RGB order, so we need to swap the channels
@@ -75,7 +83,7 @@ def select_image():
 			panelB.image = edged
 			panelB.grid(row=0, column=1, padx=10, pady=10)
 			valor2 = gera_histograma(gray_quantizado)
-			plt.plot(valor)
+			plt.plot(valor2)
 			canvas = FigureCanvasTkAgg(figure, root)
 			canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
 		# otherwise, update the image panels
