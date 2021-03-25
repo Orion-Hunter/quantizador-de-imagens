@@ -1,54 +1,72 @@
-from tkinter import *
+from tkinter import Tk, Label, Menu, Button, Frame, W
 from PIL import ImageTk, Image
 from tkinter import filedialog
 import os
-from lib import * 
+from lib import *
+from cv2 import cv2
+import numpy as np
+import math
 
+def quantizador(imagem, num_escala):#retorna a imagem quantizada
+    ## Quantização ##
+    # 255 / 31 = 8,22...
+    # Assim, teremos uma imagem com 8 tons de cinza. A conta é feita desta forma para descartar a parte decimal dos números e alterar o vetor para que possua apenas 8 valores possíveis.
+    n = num_escala #numero de escalas de cinza
+    r = math.floor(255/n)
+    img = np.uint8(imagem / r) * r #uint8 = integer (0 to 255).
+    return img
 
+def select_image():
+	# grab a reference to the image panels
+	global panelA, panelB
+	# open a file chooser dialog and allow the user to select an input
+	# image
+	path = filedialog.askopenfilename(title='open')
 
+	# ensure a file path was selected
+	if len(path) > 0:
+		# load the image from disk, convert it to grayscale, and detect
+		# edges in it
+		image = cv2.imread(path)
+		gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+		edged = quantizador(gray, 4)
+		# OpenCV represents images in BGR order; however PIL represents
+		# images in RGB order, so we need to swap the channels
+		#image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+		# convert the images to PIL format...
+		image = Image.fromarray(gray)
+		edged = Image.fromarray(edged)
+		# ...and then to ImageTk format
+		image = ImageTk.PhotoImage(image)
+		edged = ImageTk.PhotoImage(edged)
 
+		# if the panels are None, initialize them
+		if panelA is None or panelB is None:
+			# the first panel will store our original image
+			panelA = Label(image=image)
+			panelA.image = image
+			panelA.pack(side="left", padx=10, pady=10)
+			# while the second panel will store the edge map
+			panelB = Label(image=edged)
+			panelB.image = edged
+			panelB.pack(side="right", padx=10, pady=10)
+		# otherwise, update the image panels
+		else:
+			# update the pannels
+			panelA.configure(image=image)
+			panelB.configure(image=edged)
+			panelA.image = image
+			panelB.image = edged
 
-
-def open_file_selector():
-    filename = filedialog.askopenfilename(title='open')
-    return filename
-
-def open_img(component):
-    x = open_file_selector()
-    img = Image.open(x)
-    img = img.resize((500, 350), Image.ANTIALIAS)
-    img = ImageTk.PhotoImage(img)
-    imagem_original = Label(root, image=img)
-    imagem_original.image= img
-    imagem_original.place(in_=component)
-  
-
-
-##Seetings Main Window
+# initialize the window toolkit along with the two image panels
 root = Tk()
-root_width = root.winfo_screenwidth()
-root_height = root.winfo_screenheight()
-root.geometry("%dx%d+0+0" % (root_width, root_height))
-
-#Setting Main Menu
-menu_bar = Menu(root)
-filemenu = Menu(menu_bar, tearoff=0)
-filemenu.add_command(label="Abrir Imagem", command=lambda: open_img(frame1))
-menu_bar.add_cascade(label="File", menu=filemenu)
-
-#Settings Components
-label1= Label(root,text='Imagem Original')
-label1.grid(row=16,column=0)
-frame1 = Frame(root, bg="#FFFFFF", height=355, width=505, borderwidth=3)
-frame1.grid(row=17, column=0, sticky=W, pady=7, padx=7)
-
-label2= Label(root,text='Imagem Quantizada')
-label2.grid(row=16,column=5)
-frame2 = Frame(root, bg="#FFFFFF", height=355, width=505, borderwidth=3)
-frame2.grid(row=17, column=5, sticky=W, pady=7, padx=7)
-
-
-
-root.config(menu=menu_bar)
+panelA = None
+panelB = None
+# create a button, then when pressed, will trigger a file chooser
+# dialog and allow the user to select an input image; then add the
+# button the GUI
+btn = Button(root, text="Selecionar Imagem", command=select_image)
+btn.pack(side="bottom", fill="both", expand="yes", padx="10", pady="10")
+# kick off the GUI
 root.mainloop()
 
