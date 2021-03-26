@@ -13,6 +13,8 @@ import tkinter as tk
 from tkinter.ttk import *
 
 import matplotlib
+
+#configura a plotagem do matlab para a janela Tkinter
 matplotlib.use("TkAgg")
 
 
@@ -42,18 +44,16 @@ def quantizador(imagem, num_escala):  # retorna a imagem quantizada
     return img
 
 
-def gera_histograma(img):
+def gera_histograma(img): #retorna o histograma
     # http://docs.opencv.org/master/d1/db7/tutorial_py_histogram_begins.html#gsc.tab=0
     # calcHist(images, channels, mask, histSize, ranges)
     # histSize: representa BIN count (pode agrupar intervalo de pixels)
     # ranges: ex: [0, 256]
     hist = cv2.calcHist([img], [0], None, [256], [0, 256])
-    # plt.plot(hist)
-    # plt.show()
     return hist
 
 
-def select_image():
+def select_image(): #abre o explore para selecionar a imagem(colorida) e abre ela(cinza) na janela junto com o histograma dela
     global panelA, path
     path = filedialog.askopenfilename(title='open')
 
@@ -86,7 +86,7 @@ def select_image():
             panelA.image = image
 
 
-def quantize_image(resol=4):
+def quantize_image(resol):#pega o valor do campo e seta para quantizar a imagem e mostrar ela na janela junto com o histograma
     global panelB
     print(resol)
     if resol is not None:
@@ -123,11 +123,6 @@ def quantize_image(resol=4):
             canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
 
 
-# def set_resolution(event):
-#     quantizador_num = int(
-#         resolution_component.get()
-#     )
-
 
 # initialize the window toolkit along with the two image panels
 root = Tk()
@@ -139,8 +134,6 @@ root.geometry("%dx%d+0+0" % (root_width, root_height))
 menu_bar = Menu(root)
 filemenu = Menu(menu_bar, tearoff=0)
 filemenu.add_command(label="Abrir Imagem", command=select_image)
-# filemenu.add_command(
-#     label="Quantizar", command=lambda: quantize_image(4))
 menu_bar.add_cascade(label="File", menu=filemenu)
 
 panelA = None
@@ -153,8 +146,8 @@ resolution_component = Entry(root)
 resolution_component.place(x=root_width / 1.7, y=170)
 resolution_component.bind("<Return>", set_resolution)
 
-#quantizer = Button(root, text='Quantizar Imagem', command=lambda: quantize_image())
-#quantizer.place(x=root_width/1.2, y=200)
+
+
 
 root.config(menu=menu_bar)
 root.mainloop()
