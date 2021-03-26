@@ -22,13 +22,17 @@ figure2 = Figure(figsize=(5, 4), dpi=100)
 plt1 = figure.add_subplot(1, 1, 1)
 plt2 = figure2.add_subplot(1, 1, 1)
 
+
 global path_copy, resolution
+# resolution = 4
+
 
 def set_resolution(event):
     resolution = int(resolution_component.get())
     print(resolution)
     resolution_component.delete(0, tk.END)
     figure2.clear()
+    quantize_image(resolution)
 
 
 def quantizador(imagem, num_escala):  # retorna a imagem quantizada
@@ -67,11 +71,11 @@ def select_image():
         img_dim = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
 
         gray = cv2.cvtColor(img_dim, cv2.COLOR_BGR2GRAY)
-       
+
         image = Image.fromarray(gray)
-       
+
         image = ImageTk.PhotoImage(image)
-       
+
         if panelA is None:
             panelA = Label(image=image)
             panelA.image = image
@@ -85,7 +89,8 @@ def select_image():
             panelA.image = image
 
 
-def quantize_image(resol):
+def quantize_image(resol=4):
+    print(resol)
     if resol is not None:
         image = cv2.imread(path)
 
@@ -109,6 +114,12 @@ def quantize_image(resol):
         canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
 
 
+# def set_resolution(event):
+#     quantizador_num = int(
+#         resolution_component.get()
+#     )
+
+
 # initialize the window toolkit along with the two image panels
 root = Tk()
 root_width = root.winfo_screenwidth()
@@ -119,7 +130,8 @@ root.geometry("%dx%d+0+0" % (root_width, root_height))
 menu_bar = Menu(root)
 filemenu = Menu(menu_bar, tearoff=0)
 filemenu.add_command(label="Abrir Imagem", command=select_image)
-filemenu.add_command(label="Quantizar", command=lambda: quantize_image(4))
+filemenu.add_command(
+    label="Quantizar", command=lambda: quantize_image(4))
 menu_bar.add_cascade(label="File", menu=filemenu)
 
 panelA = None
@@ -133,7 +145,7 @@ resolution_component.place(x=root_width / 1.2, y=170)
 resolution_component.bind("<Return>", set_resolution)
 
 quantizer = Button(root, text='Quantizar Imagem',
-                   command=lambda: quantize_image(resolution))
+                   command=lambda: quantize_image())
 quantizer.place(x=root_width/1.2, y=200)
 
 root.config(menu=menu_bar)
