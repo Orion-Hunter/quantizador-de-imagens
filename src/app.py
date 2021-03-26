@@ -96,13 +96,19 @@ def select_image():
 
 # initialize the window toolkit along with the two image panels
 root = Tk()
+menu_bar = Menu(root)
+filemenu = Menu(menu_bar, tearoff=0)
+filemenu.add_command(label="Abrir Imagem", command=select_image)
+menu_bar.add_cascade(label="File", menu=filemenu)
+
 panelA = None
 panelB = None
 # create a button, then when pressed, will trigger a file chooser
 # dialog and allow the user to select an input image; then add the
 # button the GUI
-btn = Button(root, text="Selecionar Imagem", command=select_image)
-btn.grid(row=2, padx="10", pady="10")
+#btn = Button(root, text="Selecionar Imagem", command=select_image)
+#btn.grid(row=2, padx="10", pady="10")
 # kick off the GUI
+root.config(menu=menu_bar)
 root.mainloop()
 
