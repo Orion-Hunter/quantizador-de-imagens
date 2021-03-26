@@ -17,10 +17,8 @@ matplotlib.use("TkAgg")
 
 
 figure = Figure(figsize=(5, 4), dpi=100)
-figure2 = Figure(figsize=(5, 4), dpi=100)
 # gs = figure.add_gridspec(2,2)
 plt1 = figure.add_subplot(1, 1, 1)
-plt2 = figure2.add_subplot(1, 1, 1)
 
 
 global path_copy, resolution
@@ -31,7 +29,6 @@ def set_resolution(event):
     resolution = int(resolution_component.get())
     print(resolution)
     resolution_component.delete(0, tk.END)
-    figure2.clear()
     quantize_image(resolution)
 
 
@@ -93,6 +90,8 @@ def quantize_image(resol=4):
     print(resol)
     if resol is not None:
         image = cv2.imread(path)
+        figure2 = Figure(figsize=(5, 4), dpi=100)
+        plt2 = figure2.add_subplot(1, 1, 1)
 
         porcentagem = 0.5
         largura = int(image.shape[0]*porcentagem)
