@@ -129,8 +129,8 @@ root.geometry("%dx%d+0+0" % (root_width, root_height))
 menu_bar = Menu(root)
 filemenu = Menu(menu_bar, tearoff=0)
 filemenu.add_command(label="Abrir Imagem", command=select_image)
-filemenu.add_command(
-    label="Quantizar", command=lambda: quantize_image(4))
+# filemenu.add_command(
+#     label="Quantizar", command=lambda: quantize_image(4))
 menu_bar.add_cascade(label="File", menu=filemenu)
 
 panelA = None
