@@ -54,7 +54,7 @@ def gera_histograma(img):
 
 
 def select_image():
-    global panelA, panelB, path
+    global panelA, path
     path = filedialog.askopenfilename(title='open')
 
     if len(path) > 0:
@@ -87,6 +87,7 @@ def select_image():
 
 
 def quantize_image(resol=4):
+    global panelB
     print(resol)
     if resol is not None:
         image = cv2.imread(path)
@@ -104,13 +105,22 @@ def quantize_image(resol=4):
 
         img = Image.fromarray(quantized_img)
         img_jpg = ImageTk.PhotoImage(img)
-        panelB = Label(image=img_jpg)
-        panelB.image = img_jpg
-        panelB.grid(row=0, column=1, padx=10, pady=10)
-        valor2 = gera_histograma(quantized_img)
-        plt2.plot(valor2)
-        canvas = FigureCanvasTkAgg(figure2, root)
-        canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
+        
+        if panelB is None:
+            panelB = Label(image=img_jpg)
+            panelB.image = img_jpg
+            panelB.grid(row=0, column=1, padx=10, pady=10)
+            valor2 = gera_histograma(quantized_img)
+            plt2.plot(valor2)
+            canvas = FigureCanvasTkAgg(figure2, root)
+            canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
+        else:
+            panelB.configure(image=img_jpg)
+            panelB.image = img_jpg
+            valor2 = gera_histograma(quantized_img)
+            plt2.plot(valor2)
+            canvas = FigureCanvasTkAgg(figure2, root)
+            canvas.get_tk_widget().grid(row=1, column=1, padx=10, pady=10)
 
 
 # def set_resolution(event):
@@ -137,15 +147,14 @@ panelA = None
 panelB = None
 
 label = Label(root, text="Resolução do Quantizador: ")
-label.place(x=root_width / 1.2, y=150)
+label.place(x=root_width / 1.7, y=150)
 
 resolution_component = Entry(root)
-resolution_component.place(x=root_width / 1.2, y=170)
+resolution_component.place(x=root_width / 1.7, y=170)
 resolution_component.bind("<Return>", set_resolution)
 
-quantizer = Button(root, text='Quantizar Imagem',
-                   command=lambda: quantize_image())
-quantizer.place(x=root_width/1.2, y=200)
+#quantizer = Button(root, text='Quantizar Imagem', command=lambda: quantize_image())
+#quantizer.place(x=root_width/1.2, y=200)
 
 root.config(menu=menu_bar)
 root.mainloop()
