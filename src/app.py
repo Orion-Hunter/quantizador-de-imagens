@@ -14,6 +14,8 @@ from tkinter.ttk import *
 
 import matplotlib
 
+#Lembrando, tem que instalar as bibliotecas para poder utilizar o programa
+
 #configura a plotagem do matlab para a janela Tkinter
 matplotlib.use("TkAgg")
 
